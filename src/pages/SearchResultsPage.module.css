@@ -1,0 +1,115 @@
+.page { min-height: 100vh; background: var(--surface); }
+
+/* Top bar */
+.topBar {
+  background: white; border-bottom: 1px solid var(--border);
+  padding: 10px 16px; display: flex; align-items: center;
+  gap: 10px; position: sticky; top: 0; z-index: 10;
+}
+.backBtn {
+  color: var(--text-2); display: flex; align-items: center;
+  flex-shrink: 0; transition: color .15s;
+}
+.backBtn:hover { color: var(--brand); }
+.searchForm {
+  flex: 1; display: flex; align-items: center; gap: 0;
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg); padding: 0 12px;
+  transition: border-color .15s;
+}
+.searchForm:focus-within { border-color: var(--brand); }
+.searchIcon { color: var(--text-3); flex-shrink: 0; }
+.searchInput {
+  flex: 1; border: none; outline: none; font-size: 14px;
+  padding: 10px 10px; background: transparent; color: var(--text-1);
+  min-width: 0;
+}
+.searchBtn {
+  height: 34px; padding: 0 16px; border-radius: var(--radius-md);
+  background: var(--brand); color: white; font-size: 13px;
+  font-weight: 500; flex-shrink: 0; margin: 4px 0 4px 6px;
+}
+.urgencyBtn {
+  height: 34px; padding: 0 12px; border-radius: var(--radius-md);
+  border: 1px solid var(--border); color: var(--text-2);
+  font-size: 12px; display: flex; align-items: center;
+  gap: 4px; flex-shrink: 0; margin: 4px 4px 4px 0;
+}
+.urgencyOn { background: var(--danger); border-color: var(--danger); color: white; }
+.viewToggle {
+  display: flex; border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden; flex-shrink: 0;
+}
+.viewBtn { display: flex; align-items: center; justify-content: center; padding: 7px 10px; color: var(--text-2); background: white; transition: all .15s; }
+.viewBtn:hover { background: var(--surface); }
+.viewActive { background: var(--brand-light) !important; color: var(--brand) !important; }
+
+/* Body layout */
+.body { display: flex; max-width: 1100px; margin: 0 auto; padding: 20px; gap: 20px; }
+
+/* Sidebar */
+.sidebar { width: 180px; flex-shrink: 0; }
+.sidebarSection { margin-bottom: 20px; }
+.sidebarTitle {
+  font-size: 11px; font-weight: 700; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px;
+}
+.sideBtn {
+  display: block; width: 100%; text-align: left;
+  padding: 7px 10px; border-radius: var(--radius-sm);
+  font-size: 13px; color: var(--text-2); transition: all .15s;
+  margin-bottom: 2px;
+}
+.sideBtn:hover { background: var(--brand-light); color: var(--brand); }
+.sideBtnActive { background: var(--brand-light); color: var(--brand); font-weight: 500; }
+
+.filterField { margin-bottom: 8px; }
+.filterField label { display: block; font-size: 11px; font-weight: 500; color: var(--text-2); margin-bottom: 3px; }
+.filterField input {
+  width: 100%; height: 30px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0 8px; font-size: 12px; outline: none;
+}
+.filterField input:focus { border-color: var(--brand); }
+.applyBtn {
+  width: 100%; height: 30px; border-radius: var(--radius-sm);
+  background: var(--brand); color: white; font-size: 12px; margin-bottom: 5px;
+}
+.clearBtn {
+  width: 100%; height: 30px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); color: var(--text-2); font-size: 12px;
+}
+
+/* Main */
+.main { flex: 1; min-width: 0; }
+.resultsHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.resultsCount { font-size: 13px; color: var(--text-2); font-weight: 500; }
+.locInfo { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-3); }
+
+.cardList { display: flex; flex-direction: column; gap: 10px; }
+.loading {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 60px; color: var(--text-3); font-size: 14px;
+}
+.spinner {
+  width: 18px; height: 18px; border: 2px solid var(--border);
+  border-top-color: var(--brand); border-radius: 50%;
+  animation: spin .7s linear infinite; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty { text-align: center; padding: 60px 20px; color: var(--text-2); }
+.browseAll {
+  display: inline-block; margin-top: 16px; padding: 9px 20px;
+  border-radius: var(--radius-md); background: var(--brand);
+  color: white; font-size: 13px; font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .body { flex-direction: column; padding: 12px; }
+  .sidebar {
+    width: 100%; display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .sidebarSection { margin-bottom: 0; }
+  .sidebarTitle { display: none; }
+  .sideBtn { width: auto; display: inline-block; }
+  .filterField { display: none; }
+}

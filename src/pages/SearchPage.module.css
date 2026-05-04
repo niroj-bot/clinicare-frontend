@@ -1,0 +1,143 @@
+.page { min-height: 100vh; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(150deg, #0a2e1c 0%, #1a6b4a 60%, #2d9268 100%);
+  padding: 60px 24px 50px;
+}
+.heroInner { max-width: 680px; margin: 0 auto; text-align: center; }
+.heroBadge {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase;
+  background: rgba(255,255,255,.12); color: rgba(255,255,255,.8);
+  padding: 5px 14px; border-radius: 99px; margin-bottom: 18px;
+}
+.heroTitle {
+  font-family: var(--font-display); font-size: 40px; color: white;
+  margin-bottom: 10px; letter-spacing: -0.5px; line-height: 1.2;
+}
+.heroSub { font-size: 16px; color: rgba(255,255,255,.65); margin-bottom: 32px; }
+
+/* Search bar */
+.searchBar {
+  display: flex; gap: 10px; align-items: center;
+  max-width: 600px; margin: 0 auto 12px;
+}
+.searchInner {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+  background: white; border-radius: var(--radius-xl);
+  padding: 0 16px; position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,.2);
+}
+.searchIcon { color: #8a9490; flex-shrink: 0; }
+.searchInput {
+  flex: 1; border: none; outline: none; font-size: 15px;
+  padding: 16px 0; background: transparent; color: var(--text-1);
+}
+.searchInput::placeholder { color: #aab5b0; }
+.clearBtn { color: var(--text-3); font-size: 14px; flex-shrink: 0; }
+.clearBtn:hover { color: var(--text-1); }
+.searchBtn {
+  height: 52px; padding: 0 28px; border-radius: var(--radius-xl);
+  background: var(--accent); color: white;
+  font-size: 15px; font-weight: 600; flex-shrink: 0;
+  transition: background .15s; box-shadow: 0 8px 32px rgba(0,0,0,.2);
+}
+.searchBtn:hover { background: #d49200; }
+
+/* Dropdown suggestions */
+.dropdown {
+  position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-md);
+  z-index: 100; overflow: hidden;
+}
+.sugItem {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 11px 16px; font-size: 14px; color: var(--text-1);
+  text-align: left; transition: background .1s;
+}
+.sugItem:hover { background: var(--surface); }
+.sugIcon { color: var(--text-3); flex-shrink: 0; }
+
+/* Location note */
+.locNote {
+  display: flex; align-items: center; justify-content: center;
+  gap: 5px; font-size: 12px; color: rgba(255,255,255,.5);
+  margin-bottom: 16px;
+}
+
+/* Popular chips */
+.popularRow {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; justify-content: center;
+}
+.popLabel { font-size: 13px; color: rgba(255,255,255,.5); }
+.popChip {
+  font-size: 12px; padding: 5px 12px; border-radius: 99px;
+  border: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.8);
+  background: rgba(255,255,255,.08); transition: all .15s;
+}
+.popChip:hover { background: rgba(255,255,255,.18); }
+
+/* Stats strip */
+.statsStrip {
+  display: flex; align-items: center; justify-content: center;
+  gap: 20px; padding: 14px 24px; background: white;
+  border-bottom: 1px solid var(--border); font-size: 14px;
+  color: var(--text-2); flex-wrap: wrap;
+}
+.statsStrip strong { color: var(--brand); }
+.dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border); }
+
+/* Category section */
+.catSection { padding: 48px 24px; background: white; }
+.catTitle { font-family: var(--font-display); font-size: 24px; color: var(--text-1); margin-bottom: 20px; }
+.catGrid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 12px; max-width: 860px; margin: 0 auto;
+}
+@media (max-width: 640px) { .catGrid { grid-template-columns: repeat(2, 1fr); } }
+.catCard {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; padding: 20px 16px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); cursor: pointer; transition: all .15s;
+}
+.catCard:hover { border-color: var(--brand); background: var(--brand-light); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.catIcon  { font-size: 28px; }
+.catLabel { font-size: 13px; font-weight: 500; color: var(--text-1); }
+
+/* Sections */
+.section     { padding: 64px 24px; background: white; }
+.sectionGray { padding: 64px 24px; background: var(--surface); }
+.sectionInner { max-width: 860px; margin: 0 auto; }
+.sectionLabel { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--brand); margin-bottom: 8px; }
+.sectionTitle { font-family: var(--font-display); font-size: 30px; color: var(--text-1); margin-bottom: 36px; }
+
+.stepsGrid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+@media(max-width:640px){ .stepsGrid { grid-template-columns:1fr; } }
+.stepCard { padding: 24px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.stepNum  { font-size: 11px; font-weight: 700; color: var(--brand); letter-spacing: .1em; margin-bottom: 12px; }
+.stepIcon { font-size: 28px; margin-bottom: 12px; }
+.stepTitle{ font-size: 15px; font-weight: 600; color: var(--text-1); margin-bottom: 8px; }
+.stepDesc { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+.featGrid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+@media(max-width:640px){ .featGrid { grid-template-columns:1fr; } }
+.featCard { padding: 24px; background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); }
+.featIcon { font-size: 28px; margin-bottom: 12px; }
+.featTitle{ font-size: 15px; font-weight: 600; color: var(--text-1); margin-bottom: 8px; }
+.featDesc { font-size: 13px; color: var(--text-2); line-height: 1.65; }
+
+/* CTA */
+.cta { background: linear-gradient(135deg, #0a2e1c, #1a6b4a); padding: 60px 24px; text-align: center; }
+.ctaInner { max-width: 500px; margin: 0 auto; }
+.ctaTitle { font-family: var(--font-display); font-size: 30px; color: white; margin-bottom: 8px; }
+.ctaSub   { font-size: 15px; color: rgba(255,255,255,.7); margin-bottom: 24px; }
+.ctaBtn   {
+  padding: 13px 32px; border-radius: var(--radius-md);
+  background: white; color: var(--brand);
+  font-size: 15px; font-weight: 600; transition: all .15s;
+}
+.ctaBtn:hover { background: var(--brand-light); }

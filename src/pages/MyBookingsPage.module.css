@@ -1,0 +1,28 @@
+.page { padding: 24px; min-height: calc(100vh - var(--nav-h)); }
+.inner { max-width: 620px; margin: 0 auto; }
+.loading { text-align: center; padding: 80px; color: var(--text-3); }
+.title { font-family: var(--font-display); font-size: 28px; margin-bottom: 20px; }
+.section { font-size: 13px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: .06em; margin: 20px 0 10px; }
+.empty { text-align: center; padding: 60px 0; color: var(--text-2); }
+.searchLink { display: inline-block; margin-top: 12px; font-size: 14px; color: var(--brand); font-weight: 500; }
+.list { display: flex; flex-direction: column; gap: 10px; }
+.card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; }
+.cardPast { opacity: .7; }
+.cardTop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.clinicName { font-size: 15px; font-weight: 600; color: var(--text-1); }
+.service { font-size: 13px; color: var(--text-2); margin-top: 2px; }
+.meta { display: flex; gap: 16px; font-size: 13px; color: var(--text-3); flex-wrap: wrap; }
+.ref { font-family: monospace; font-size: 11px; color: var(--text-3); }
+.status { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 99px; flex-shrink: 0; }
+.blue  { background: #e6eef8; color: #2255aa; }
+.green { background: #e6f4ec; color: #1a6b4a; }
+.gray  { background: var(--surface); color: var(--text-3); border: 1px solid var(--border); }
+.red   { background: var(--danger-light); color: var(--danger); }
+.cancelBtn {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-top: 10px; padding: 5px 12px; border-radius: var(--radius-sm);
+  border: 1px solid #f5c0c0; background: var(--danger-light);
+  color: var(--danger); font-size: 12px; transition: all .15s;
+}
+.cancelBtn:hover:not(:disabled) { background: #f9dada; }
+.cancelBtn:disabled { opacity: .5; cursor: not-allowed; }

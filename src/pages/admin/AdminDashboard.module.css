@@ -1,0 +1,28 @@
+.loading { color: var(--text-3); padding: 40px 0; }
+.statsGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+@media (max-width: 900px) { .statsGrid { grid-template-columns: repeat(2, 1fr); } }
+
+.sectionTitle { font-size: 14px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 12px; }
+
+.quickLinks { margin-bottom: 28px; }
+.linkGrid   { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.quickCard  {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px 18px;
+  transition: all .15s;
+}
+.quickCard:hover { border-color: var(--brand); box-shadow: var(--shadow-sm); }
+.quickIcon  { color: var(--brand); flex-shrink: 0; }
+.quickLabel { font-size: 14px; font-weight: 500; color: var(--text-1); }
+.quickSub   { font-size: 12px; color: var(--text-3); }
+
+.clinicList { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.clinicRow  {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+}
+.clinicRow:last-child { border-bottom: none; }
+.clinicName { font-size: 14px; font-weight: 500; color: var(--text-1); }
+.clinicAddr { font-size: 12px; color: var(--text-3); }
+.clinicRating { font-size: 13px; color: var(--text-2); }
