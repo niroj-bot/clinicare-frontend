@@ -14,7 +14,7 @@ export default function AdminDashboard() {
     adminApi.getClinics()
       .then(({ data }) => {
         setClinics(data);
-        // fetch bookings for first clinic to show recent activity
+        
         if (data.length > 0) {
           return adminApi.getBookings(data[0].id);
         }

@@ -16,7 +16,7 @@ export default function AdminClinics() {
   const [acctClinic,setAcctClinic]=useState(null);    // clinic to create account for
   const [form,      setForm]     = useState(EMPTY);
   const [acctForm,  setAcctForm] = useState(ACCT);
-  const [accounts,  setAccounts] = useState({});      // clinicId → { email }
+  const [accounts,  setAccounts] = useState({});      
   const [saving,    setSaving]   = useState(false);
   const [error,     setError]    = useState('');
   const [acctMsg,   setAcctMsg]  = useState('');

@@ -28,8 +28,6 @@ export default function AdminBookings() {
   }, [selClinic]);
 
   const updateStatus = async (bookingRef, newStatus) => {
-    // Find booking id — we need to search by ref, but admin API uses id
-    // For now trigger a reload after patch using index
     try {
       const idx = bookings.findIndex(b => b.bookingRef === bookingRef);
       if (idx === -1) return;
@@ -67,7 +65,6 @@ export default function AdminBookings() {
         subtitle="View and manage all patient appointments"
       />
 
-      {/* Controls */}
       <div className={styles.toolbar}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <label style={{ fontSize: 13, color: 'var(--text-2)', fontWeight: 500 }}>Clinic:</label>
@@ -93,7 +90,6 @@ export default function AdminBookings() {
         </div>
       </div>
 
-      {/* Summary row */}
       <div className={styles.summary}>
         {STATUSES.map(s => (
           <div key={s} className={styles.summaryItem}>

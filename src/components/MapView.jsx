@@ -30,7 +30,7 @@ function FlyToClinic({ lat, lng }) {
 }
 
 export default function MapView({ clinics, userLocation, focusClinic }) {
-  // focusClinic = single clinic to zoom in on (for detail page)
+  // single clinic to zoom in for detail page
   const center = focusClinic
     ? [focusClinic.latitude, focusClinic.longitude]
     : userLocation
@@ -46,7 +46,7 @@ export default function MapView({ clinics, userLocation, focusClinic }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {/* Fly to clinic when focusClinic changes */}
+     
         {focusClinic && <FlyToClinic lat={focusClinic.latitude} lng={focusClinic.longitude} />}
 
         {clinics.map(clinic =>

@@ -27,8 +27,7 @@ export default function ProfilePage() {
     if (!user) { navigate('/login'); return; }
     if (user.role === 'CLINIC') { navigate('/clinic'); return; }
     if (user.role === 'ADMIN')  { navigate('/admin'); return; }
-    // Redirect doctors to their own profile page
-    
+
     if (user.role === 'ADMIN')  { navigate('/admin'); return; }
     api.get('/api/profile').then(({ data }) => {
       setProfile(data);

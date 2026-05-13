@@ -1,4 +1,4 @@
-.footer { background: #0a2e1c; color: rgba(255,255,255,.6); }
+.footer { background: #020817; color: rgba(255,255,255,.6); }
 .inner { max-width: 900px; margin: 0 auto; padding: 48px 24px 32px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
 @media (max-width: 640px) { .inner { grid-template-columns: 1fr 1fr; } }
 .brand {}

@@ -16,9 +16,7 @@ const NAV = [
 export default function AdminLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
-  // FIX BUG 1 — use Navigate component, not useEffect+navigate
-  // This prevents the redirect loop that sends admin back to homepage
+  
   if (!user)               return <Navigate to="/login" replace />;
   if (user.role !== 'ADMIN') return <Navigate to="/" replace />;
 

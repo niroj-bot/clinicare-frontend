@@ -9,7 +9,6 @@ import styles from './BookingPage.module.css';
 
 const STEPS = ['Service', 'Time slot', 'Your details', 'Confirm'];
 
-// Group slots by time frame with breaks
 function groupSlots(slots) {
   const morning   = slots.filter(s => {
     const h = parseInt(s.startTime?.split(':')[0]);
@@ -26,7 +25,6 @@ function groupSlots(slots) {
   return { morning, afternoon, evening };
 }
 
-// Format time to 12h AM/PM
 function fmt(time) {
   if (!time) return '';
   const [h, m] = time.split(':').map(Number);
@@ -35,7 +33,6 @@ function fmt(time) {
   return `${h12}:${String(m).padStart(2,'0')} ${ampm}`;
 }
 
-// Generate 7-day tab dates
 function getDays() {
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date();

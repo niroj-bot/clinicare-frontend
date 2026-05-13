@@ -6,11 +6,9 @@ export default function StarRating({ value, onChange, size = 16 }) {
   const stars = [1, 2, 3, 4, 5];
 
   if (onChange) {
-    // Interactive — hover preview only after value is set
     return (
       <div className={styles.stars}>
         {stars.map(s => {
-          // Gold if: hovered (preview) OR permanently selected
           const isGold = hovered > 0 ? s <= hovered : s <= value;
           return (
             <button

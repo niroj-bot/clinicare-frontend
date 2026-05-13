@@ -62,14 +62,13 @@ export default function SearchResultsPage() {
           setUserLoc(loc);
         },
         () => setUserLoc(DEFAULT), // denied → use Tokyo
-        { timeout: 5000 }          // don't wait more than 5 seconds
+        { timeout: 5000 }        
       );
     } else {
       setUserLoc(DEFAULT);
     }
   }, []);
 
-  // Only fetch after userLoc is set — ensures distance is always correct
   useEffect(() => {
     if (userLoc) fetchClinics();
   }, [sortBy, category, urgency, userLoc]);
