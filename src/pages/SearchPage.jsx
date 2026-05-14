@@ -54,7 +54,6 @@ export default function SearchPage() {
   return (
     <div className={styles.page}>
 
-      {/* ── HERO ──────────────────────────────────────── */}
       <section className={styles.hero}>
         <div className={`${styles.heroInner} ${visible ? styles.heroVisible : ''}`}>
 
@@ -72,7 +71,6 @@ export default function SearchPage() {
             Compare prices, distance, and ratings across 55+ clinics in Japan's major cities.
           </p>
 
-          {/* Search */}
           <div className={styles.searchWrap} ref={searchRef}>
             <div className={styles.searchBar}>
               <Search size={18} className={styles.searchIcon}/>
@@ -106,7 +104,6 @@ export default function SearchPage() {
             <MapPin size={12}/> Distance calculated automatically from your location
           </div>
 
-          {/* Popular chips */}
           <div className={styles.chips}>
             {POPULAR.map(p => (
               <button key={p} className={styles.chip} onClick={() => goSearch(p)}>{p}</button>
@@ -114,12 +111,10 @@ export default function SearchPage() {
           </div>
         </div>
 
-        {/* Decorative blobs */}
         <div className={styles.blob1}/>
         <div className={styles.blob2}/>
       </section>
 
-      {/* ── STATS ─────────────────────────────────────── */}
       <section className={styles.statsBar}>
         {STATS.map((s, i) => (
           <div key={i} className={styles.statItem}>
@@ -129,7 +124,6 @@ export default function SearchPage() {
         ))}
       </section>
 
-      {/* ── CATEGORIES ────────────────────────────────── */}
       <section className={styles.catSection}>
         <div className={styles.sectionInner}>
           <div className={styles.sectionEyebrow}>Browse by specialty</div>
@@ -146,7 +140,6 @@ export default function SearchPage() {
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ──────────────────────────────── */}
       <section className={styles.howSection}>
         <div className={styles.sectionInner}>
           <div className={styles.sectionEyebrow}>How it works</div>
@@ -168,7 +161,6 @@ export default function SearchPage() {
         </div>
       </section>
 
-      {/* ── FOR CLINICS (replaces Why ClinICare) ──────── */}
       <section className={styles.clinicSection}>
         <div className={styles.clinicInner}>
           <div className={styles.clinicImage}>
@@ -211,7 +203,6 @@ export default function SearchPage() {
         </div>
       </section>
 
-      {/* ── CTA ───────────────────────────────────────── */}
       <section className={styles.cta}>
         <div className={styles.ctaInner}>
           <div className={styles.ctaEyebrow}>Ready?</div>
