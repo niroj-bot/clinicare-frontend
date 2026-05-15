@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { adminApi } from '../../adminApi';
-import { PageHeader, AdminTable, StatusBadge, Btn } from '../../components/admin/AdminUI';
+import { PageHeader, AdminTable, StatusBadge } from '../../components/admin/AdminUI';
 import styles from './AdminBookings.module.css';
 
 const STATUSES = ['BOOKED', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
@@ -8,32 +8,29 @@ const STATUSES = ['BOOKED', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
 export default function AdminBookings() {
   const [clinics,   setClinics]   = useState([]);
   const [bookings,  setBookings]  = useState([]);
-  const [selClinic, setSelClinic] = useState('');
+  const [selClinic, setSelClinic] = useState('ALL');
   const [loading,   setLoading]   = useState(false);
   const [filter,    setFilter]    = useState('ALL');
 
   useEffect(() => {
-    adminApi.getClinics().then(({ data }) => {
-      setClinics(data);
-      if (data.length) setSelClinic(String(data[0].id));
-    });
+    adminApi.getClinics().then(({ data }) => setClinics(data));
   }, []);
 
   useEffect(() => {
-    if (!selClinic) return;
     setLoading(true);
-    adminApi.getBookings(selClinic)
+    const fetch = selClinic === 'ALL'
+      ? adminApi.getAllBookings()
+      : adminApi.getBookings(selClinic);
+    fetch
       .then(({ data }) => setBookings(data))
       .finally(() => setLoading(false));
   }, [selClinic]);
 
-  const updateStatus = async (bookingRef, newStatus) => {
+  const updateStatus = async (id, newStatus) => {
     try {
-      const idx = bookings.findIndex(b => b.bookingRef === bookingRef);
-      if (idx === -1) return;
-      // optimistic update
+      await adminApi.updateBookingStatus(id, newStatus);
       setBookings(prev => prev.map(b =>
-        b.bookingRef === bookingRef ? { ...b, status: newStatus } : b
+        b.id === id ? { ...b, status: newStatus } : b
       ));
     } catch (err) { console.error(err); }
   };
@@ -41,16 +38,17 @@ export default function AdminBookings() {
   const filtered = filter === 'ALL' ? bookings : bookings.filter(b => b.status === filter);
 
   const columns = [
-    { key: 'bookingRef',   label: 'Ref',         render: r => <code style={{ fontSize: 12 }}>{r.bookingRef}</code> },
-    { key: 'guestOrUser',  label: 'Patient' },
-    { key: 'service',      label: 'Service' },
-    { key: 'date',         label: 'Date' },
-    { key: 'startTime',    label: 'Time',         render: r => r.startTime?.slice(0, 5) },
-    { key: 'status',       label: 'Status',       render: r => <StatusBadge status={r.status} /> },
-    { key: 'actions',      label: 'Update',       render: r => (
+    { key: 'bookingRef',  label: 'Ref',     render: r => <code style={{ fontSize: 12 }}>{r.bookingRef}</code> },
+    ...(selClinic === 'ALL' ? [{ key: 'clinicName', label: 'Clinic' }] : []),
+    { key: 'guestOrUser', label: 'Patient' },
+    { key: 'service',     label: 'Service' },
+    { key: 'date',        label: 'Date'    },
+    { key: 'startTime',   label: 'Time',   render: r => r.startTime?.slice(0, 5) },
+    { key: 'status',      label: 'Status', render: r => <StatusBadge status={r.status} /> },
+    { key: 'actions',     label: 'Update', render: r => (
       <select
         value={r.status}
-        onChange={e => updateStatus(r.bookingRef, e.target.value)}
+        onChange={e => updateStatus(r.id, e.target.value)}
         style={{ height: 30, border: '1px solid var(--border)', borderRadius: 6, padding: '0 8px', fontSize: 12, outline: 'none' }}
       >
         {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
@@ -73,6 +71,7 @@ export default function AdminBookings() {
             onChange={e => setSelClinic(e.target.value)}
             style={{ height: 34, border: '1px solid var(--border)', borderRadius: 6, padding: '0 10px', fontSize: 13, outline: 'none' }}
           >
+            <option value="ALL">All Clinics</option>
             {clinics.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
@@ -105,7 +104,7 @@ export default function AdminBookings() {
         <AdminTable
           columns={columns}
           rows={filtered}
-          emptyMsg={filter === 'ALL' ? 'No bookings yet for this clinic.' : `No ${filter} bookings.`}
+          emptyMsg={filter === 'ALL' ? 'No bookings found.' : `No ${filter} bookings.`}
         />
       )}
     </div>
