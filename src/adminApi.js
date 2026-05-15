@@ -17,4 +17,5 @@ export const adminApi = {
   // Bookings
   getBookings:      (clinicId)        => api.get(`/api/admin/clinics/${clinicId}/bookings`),
   updateBookingStatus: (id, status)   => api.patch(`/api/admin/bookings/${id}/status`, { status }),
+  getAllBookings: () => api.get('/api/admin/bookings'),
 };

@@ -11,18 +11,13 @@ export default function AdminDashboard() {
   const [loading, setLoading]   = useState(true);
 
   useEffect(() => {
-    adminApi.getClinics()
-      .then(({ data }) => {
-        setClinics(data);
-        
-        if (data.length > 0) {
-          return adminApi.getBookings(data[0].id);
-        }
-      })
-      .then(res => { if (res) setBookings(res.data); })
-      .finally(() => setLoading(false));
-  }, []);
-
+  Promise.all([adminApi.getClinics(), adminApi.getAllBookings()])
+    .then(([clinicsRes, bookingsRes]) => {
+      setClinics(clinicsRes.data);
+      setBookings(bookingsRes.data);
+    })
+    .finally(() => setLoading(false));
+}, []);
   const totalServices = clinics.reduce((sum, c) => sum + (c.services?.length || 0), 0);
 
   return (
