@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
-import { Search, Map, List, Zap, ChevronLeft, MapPin } from 'lucide-react';
+import { Search, Map, List, Zap, ChevronLeft, MapPin, ChevronLeft as Prev, ChevronRight as Next } from 'lucide-react';
 import { clinicApi } from '../api';
 import ClinicCard from '../components/ClinicCard';
 import MapView from '../components/MapView';
@@ -14,15 +14,17 @@ const SORT_OPTIONS = [
 ];
 
 const CATEGORIES = [
-  { label: 'All',         value: '' },
-  { label: '🩸 Lab',      value: 'Lab' },
-  { label: '🔬 Imaging',  value: 'Imaging' },
-  { label: '🦷 Dental',   value: 'Dental' },
-  { label: '❤️ Cardio',   value: 'Cardiology' },
-  { label: '👶 Pediatric',value: 'Pediatrics' },
+  { label: 'All',          value: '' },
+  { label: '🩸 Lab',       value: 'Lab' },
+  { label: '🔬 Imaging',   value: 'Imaging' },
+  { label: '🦷 Dental',    value: 'Dental' },
+  { label: '❤️ Cardio',    value: 'Cardiology' },
+  { label: '👶 Pediatric', value: 'Pediatrics' },
   { label: '🛡 Preventive',value: 'Preventive' },
-  { label: '🏥 General',  value: 'General' },
+  { label: '🏥 General',   value: 'General' },
 ];
+
+const PER_PAGE = 10;
 
 export default function SearchResultsPage() {
   const [searchParams] = useSearchParams();
@@ -37,32 +39,28 @@ export default function SearchResultsPage() {
   const [urgency,  setUrgency]  = useState(false);
   const [userLoc,  setUserLoc]  = useState(null);
   const [filters,  setFilters]  = useState({ maxPrice: '', maxDistanceKm: '', minRating: '' });
-  const searchRef = useRef(null);
+  const [page,     setPage]     = useState(1);
+  const topRef = useRef(null);
 
-  // Get GPS first, then fetch clinics — avoids 0km distance on first load
+  // Reset to page 1 when filters/sort/category change
+  useEffect(() => { setPage(1); }, [sortBy, category, urgency, clinics]);
+
+  // GPS
   useEffect(() => {
-    const DEFAULT = { lat: 35.6895, lng: 139.6917 }; // Tokyo fallback
-
-    // Check cached location from previous visit
-    const cached = localStorage.getItem("userLocation");
+    const DEFAULT = { lat: 35.6895, lng: 139.6917 };
+    const cached = localStorage.getItem('userLocation');
     if (cached) {
-      try {
-        const loc = JSON.parse(cached);
-        setUserLoc(loc);
-        return; // fetchClinics triggered by userLoc change below
-      } catch {}
+      try { setUserLoc(JSON.parse(cached)); return; } catch {}
     }
-
-    // Request fresh GPS
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         pos => {
           const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-          localStorage.setItem("userLocation", JSON.stringify(loc));
+          localStorage.setItem('userLocation', JSON.stringify(loc));
           setUserLoc(loc);
         },
-        () => setUserLoc(DEFAULT), // denied → use Tokyo
-        { timeout: 5000 }        
+        () => setUserLoc(DEFAULT),
+        { timeout: 5000 }
       );
     } else {
       setUserLoc(DEFAULT);
@@ -89,6 +87,7 @@ export default function SearchResultsPage() {
         ? await clinicApi.urgency(params)
         : await clinicApi.search(params);
       setClinics(Array.isArray(data) ? data : []);
+      setPage(1);
     } catch { setClinics([]); }
     finally { setLoading(false); }
   };
@@ -98,9 +97,36 @@ export default function SearchResultsPage() {
     fetchClinics();
   };
 
+  // Pagination
+  const totalPages  = Math.ceil(clinics.length / PER_PAGE);
+  const paginated   = clinics.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+
+  const goPage = (p) => {
+    setPage(p);
+    // Scroll to top of results
+    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  // Build page buttons with ellipsis
+  const buildPages = () => {
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) pages.push(i);
+    const visible = pages.filter(p =>
+      p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)
+    );
+    const result = [];
+    let prev = null;
+    for (const p of visible) {
+      if (prev && p - prev > 1) result.push('...');
+      result.push(p);
+      prev = p;
+    }
+    return result;
+  };
+
   return (
     <div className={styles.page}>
-      {/* Search bar at top */}
+      {/* Search bar */}
       <div className={styles.topBar}>
         <Link to="/" className={styles.backBtn}><ChevronLeft size={20}/></Link>
         <form className={styles.searchForm} onSubmit={handleSearch}>
@@ -127,9 +153,8 @@ export default function SearchResultsPage() {
       </div>
 
       <div className={styles.body}>
-        {/* Left sidebar */}
+        {/* Sidebar */}
         <aside className={styles.sidebar}>
-          {/* Sort */}
           <div className={styles.sidebarSection}>
             <div className={styles.sidebarTitle}>Sort by</div>
             {SORT_OPTIONS.map(opt => (
@@ -141,7 +166,6 @@ export default function SearchResultsPage() {
             ))}
           </div>
 
-          {/* Categories */}
           <div className={styles.sidebarSection}>
             <div className={styles.sidebarTitle}>Category</div>
             {CATEGORIES.map(cat => (
@@ -153,7 +177,6 @@ export default function SearchResultsPage() {
             ))}
           </div>
 
-          {/* Filters */}
           <div className={styles.sidebarSection}>
             <div className={styles.sidebarTitle}>Filters</div>
             <div className={styles.filterField}>
@@ -184,10 +207,15 @@ export default function SearchResultsPage() {
 
         {/* Results */}
         <div className={styles.main}>
-          <div className={styles.resultsHeader}>
+          <div className={styles.resultsHeader} ref={topRef}>
             <div className={styles.resultsCount}>
               {loading ? 'Searching...' :
                 `${clinics.length} clinic${clinics.length!==1?'s':''} found${urgency?' (ASAP)':''}`}
+              {!loading && clinics.length > PER_PAGE && (
+                <span className={styles.pageInfo}>
+                  — page {page} of {totalPages}
+                </span>
+              )}
             </div>
             {userLoc && (
               <div className={styles.locInfo}>
@@ -199,29 +227,69 @@ export default function SearchResultsPage() {
           {view === 'map' ? (
             <MapView clinics={clinics} userLocation={userLoc}/>
           ) : (
-            <div className={styles.cardList}>
-              {loading ? (
-                <div className={styles.loading}>
-                  <div className={styles.spinner}/>
-                  Searching clinics...
+            <>
+              <div className={styles.cardList}>
+                {loading ? (
+                  <div className={styles.loading}>
+                    <div className={styles.spinner}/>
+                    Searching clinics...
+                  </div>
+                ) : clinics.length === 0 ? (
+                  <div className={styles.empty}>
+                    <div style={{fontSize:48,marginBottom:12}}>🔍</div>
+                    <p style={{fontWeight:500,marginBottom:6}}>No clinics found</p>
+                    <p style={{fontSize:13,color:'var(--text-3)'}}>
+                      Try different keywords or remove filters
+                    </p>
+                    <button className={styles.browseAll}
+                      onClick={() => { setKeyword(''); setCategory(''); fetchClinics(); }}>
+                      Browse all clinics
+                    </button>
+                  </div>
+                ) : paginated.map(clinic => (
+                  <ClinicCard key={clinic.id} clinic={clinic}
+                    onCompareToggle={() => {}} compareSelected={false}/>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {!loading && totalPages > 1 && (
+                <div className={styles.pagination}>
+                  <span className={styles.paginationInfo}>
+                    {(page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, clinics.length)} of {clinics.length} clinics
+                  </span>
+                  <div className={styles.paginationControls}>
+                    <button
+                      className={styles.pageBtn}
+                      disabled={page === 1}
+                      onClick={() => goPage(page - 1)}
+                    >
+                      ←
+                    </button>
+                    {buildPages().map((p, i) =>
+                      p === '...' ? (
+                        <span key={`e-${i}`} className={styles.ellipsis}>…</span>
+                      ) : (
+                        <button
+                          key={p}
+                          className={`${styles.pageBtn} ${p === page ? styles.pageBtnActive : ''}`}
+                          onClick={() => goPage(p)}
+                        >
+                          {p}
+                        </button>
+                      )
+                    )}
+                    <button
+                      className={styles.pageBtn}
+                      disabled={page === totalPages}
+                      onClick={() => goPage(page + 1)}
+                    >
+                      →
+                    </button>
+                  </div>
                 </div>
-              ) : clinics.length === 0 ? (
-                <div className={styles.empty}>
-                  <div style={{fontSize:48,marginBottom:12}}>🔍</div>
-                  <p style={{fontWeight:500,marginBottom:6}}>No clinics found</p>
-                  <p style={{fontSize:13,color:'var(--text-3)'}}>
-                    Try different keywords or remove filters
-                  </p>
-                  <button className={styles.browseAll}
-                    onClick={() => { setKeyword(''); setCategory(''); fetchClinics(); }}>
-                    Browse all clinics
-                  </button>
-                </div>
-              ) : clinics.map(clinic => (
-                <ClinicCard key={clinic.id} clinic={clinic}
-                  onCompareToggle={() => {}} compareSelected={false}/>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </div>
       </div>

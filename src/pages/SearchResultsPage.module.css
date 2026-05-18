@@ -83,6 +83,7 @@
 .main { flex: 1; min-width: 0; }
 .resultsHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .resultsCount { font-size: 13px; color: var(--text-2); font-weight: 500; }
+.pageInfo { font-weight: 400; color: var(--text-3); margin-left: 4px; }
 .locInfo { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-3); }
 
 .cardList { display: flex; flex-direction: column; gap: 10px; }
@@ -103,13 +104,41 @@
   color: white; font-size: 13px; font-weight: 500;
 }
 
+/* ── Pagination ── */
+.pagination {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 0; margin-top: 8px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap; gap: 10px;
+}
+.paginationInfo {
+  font-size: 12px; color: var(--text-3);
+}
+.paginationControls {
+  display: flex; align-items: center; gap: 4px;
+}
+.pageBtn {
+  min-width: 34px; height: 34px; padding: 0 10px;
+  border-radius: 8px; border: 1px solid var(--border);
+  font-size: 13px; color: var(--text-2); background: var(--white);
+  transition: all .15s; display: flex; align-items: center; justify-content: center;
+}
+.pageBtn:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
+.pageBtn:disabled { opacity: .35; cursor: not-allowed; }
+.pageBtnActive {
+  background: var(--brand); color: white;
+  border-color: var(--brand); font-weight: 600;
+}
+.pageBtnActive:hover { background: var(--brand-mid); border-color: var(--brand-mid); color: white; }
+.ellipsis { font-size: 13px; color: var(--text-3); padding: 0 4px; line-height: 34px; }
+
 @media (max-width: 640px) {
   .body { flex-direction: column; padding: 12px; }
-  .sidebar {
-    width: 100%; display: flex; flex-wrap: wrap; gap: 6px;
-  }
+  .sidebar { width: 100%; display: flex; flex-wrap: wrap; gap: 6px; }
   .sidebarSection { margin-bottom: 0; }
   .sidebarTitle { display: none; }
   .sideBtn { width: auto; display: inline-block; }
   .filterField { display: none; }
+  .pagination { justify-content: center; }
+  .paginationInfo { width: 100%; text-align: center; }
 }
