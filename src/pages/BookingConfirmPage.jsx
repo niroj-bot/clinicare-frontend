@@ -10,6 +10,9 @@ export default function BookingConfirmPage() {
   const { booking, clinic, service, slot } = state;
   const isGuest = !user;
 
+  // Pre-fill track URL with ref so guest can track immediately
+  const trackUrl = `/track-booking?ref=${encodeURIComponent(booking.bookingRef)}`;
+
   return (
     <div className={styles.page}>
       <div className={styles.card}>
@@ -17,7 +20,11 @@ export default function BookingConfirmPage() {
         <h1 className={styles.title}>Booking confirmed!</h1>
         <p className={styles.sub}>Your reference number:</p>
         <div className={styles.ref}>{booking.bookingRef}</div>
-        <p className={styles.hint}>Save this number to check your booking status.</p>
+        <p className={styles.hint}>
+          {isGuest
+            ? 'Save this reference — you can track your booking anytime with your email.'
+            : 'You can view this booking in My Bookings anytime.'}
+        </p>
         <div className={styles.summary}>
           <div className={styles.row}><span>Clinic</span><strong>{clinic?.name}</strong></div>
           <div className={styles.row}><span>Service</span><strong>{service?.serviceName}</strong></div>
@@ -27,15 +34,22 @@ export default function BookingConfirmPage() {
         </div>
         <div className={styles.actions}>
           <Link to="/" className={styles.homeBtn}>Find another clinic</Link>
-          {/* Only show register prompt for guests */}
+
+          {/* Guest — track booking + register prompt */}
           {isGuest && (
-            <Link to="/register" className={styles.registerBtn}>
-              Create account to track bookings
-            </Link>
+            <>
+              <Link to={trackUrl} className={styles.trackBtn}>
+                Track your booking
+              </Link>
+              <Link to="/register" className={styles.registerBtn}>
+                Create account to manage bookings
+              </Link>
+            </>
           )}
-          {/* Show my bookings for logged-in users */}
+
+          {/* Logged-in user — go to my bookings */}
           {!isGuest && (
-            <Link to="/my-bookings" className={styles.registerBtn}>
+            <Link to="/my-bookings" className={styles.trackBtn}>
               View my bookings
             </Link>
           )}

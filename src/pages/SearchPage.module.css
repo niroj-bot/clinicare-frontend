@@ -158,25 +158,144 @@
 .catArrow { color: #cbd5e1; flex-shrink: 0; transition: transform .2s; }
 .catCard:hover .catArrow { color: #16a34a; transform: translateX(3px); }
 
-.howSection { padding: 72px 24px; background: white; }
-.stepsGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-@media (max-width: 640px) { .stepsGrid { grid-template-columns: 1fr; } }
-.stepCard {
-  padding: 32px 28px; border-radius: 20px;
-  border: 1.5px solid #e2e8f0; background: #fafafa;
-  transition: all .25s; position: relative; overflow: hidden;
+/* ── How it works — browser mockup steps ─────────────────────────────────── */
+
+.howSection { padding: 72px 24px; background: #f8fafc; }
+
+.howInner { max-width: 1100px; margin: 0 auto; text-align: center; }
+
+.howTitle {
+  font-family: 'Fraunces', 'Playfair Display', Georgia, serif;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 700; color: #0f172a;
+  margin-bottom: 10px; letter-spacing: -0.5px; line-height: 1.2;
 }
-.stepCard::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0;
-  height: 3px; background: linear-gradient(90deg, #16a34a, #4ade80);
-  transform: scaleX(0); transition: transform .3s; transform-origin: left;
+
+.howSub {
+  font-size: 15px; color: #64748b;
+  margin-bottom: 48px; line-height: 1.6;
 }
-.stepCard:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.1); border-color: #16a34a; }
-.stepCard:hover::before { transform: scaleX(1); }
-.stepNum { font-size: 11px; font-weight: 800; color: #16a34a; letter-spacing: .12em; margin-bottom: 16px; }
-.stepEmoji { font-size: 32px; margin-bottom: 16px; display: block; }
-.stepTitle { font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
-.stepDesc { font-size: 14px; color: #64748b; line-height: 1.65; }
+
+.howGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  align-items: start;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .howGrid { grid-template-columns: 1fr; gap: 32px; }
+}
+
+.howCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px;
+}
+
+/* browser chrome bar */
+.browserChrome {
+  width: 100%;
+  background: #e2e8f0;
+  border-radius: 10px 10px 0 0;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #cbd5e1;
+  border-bottom: none;
+}
+
+.browserDots {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.browserBar {
+  flex: 1;
+  background: white;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #94a3b8;
+  padding: 3px 10px;
+  text-align: left;
+  border: 1px solid #e2e8f0;
+}
+
+/* screenshot area */
+.browserScreen {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+  background: #f1f5f9;
+  aspect-ratio: 4/3;
+}
+
+.stepScreenshot {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+/* label below screenshot */
+.howCardBody {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 20px;
+  text-align: left;
+  width: 100%;
+  padding: 0 4px;
+}
+
+.howNum {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: #16a34a;
+  color: white;
+  font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.howCardTitle {
+  font-size: 15px; font-weight: 700;
+  color: #0f172a; margin-bottom: 4px;
+}
+
+.howCardDesc {
+  font-size: 13px; color: #64748b; line-height: 1.6;
+}
+
+/* arrow between cards */
+.howArrow {
+  position: absolute;
+  right: -14px;
+  top: 60px;
+  font-size: 22px;
+  color: #94a3b8;
+  z-index: 2;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .howArrow { display: none; }
+}
+/* ─────────────────────────────────────────────────────────────────────────── */
 
 .clinicSection { padding: 80px 24px; background: #f8fafc; }
 .clinicInner {

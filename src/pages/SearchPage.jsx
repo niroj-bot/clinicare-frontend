@@ -4,6 +4,10 @@ import { Search, MapPin, ChevronRight, Stethoscope, Calendar, Star, Shield, Cloc
 import Footer from '../components/Footer';
 import styles from './SearchPage.module.css';
 
+import step1Img from '../assets/images/step1.png';
+import step2Img from '../assets/images/step2.png';
+import step3Img from '../assets/images/step3.png';
+
 const POPULAR = ['Blood test', 'X-Ray', 'Dental checkup', 'ECG', 'General checkup', 'MRI Scan'];
 
 const CATEGORIES = [
@@ -26,8 +30,29 @@ const STATS = [
 
 const CLINIC_BENEFITS = [
   { icon: <Calendar size={20}/>, title: 'Auto Slot Generation', desc: 'Slots created automatically every day. No manual work needed.' },
-  { icon: <Activity size={20}/>, title: 'Real-time Updates',    desc: 'Bookings appear instantly on your dashboard .' },
-  { icon: <Shield size={20}/>,   title: 'Secure & Reliable',    desc: 'role-based access and encrypted data storage.' },
+  { icon: <Activity size={20}/>, title: 'Real-time Updates',    desc: 'Bookings appear instantly on your dashboard.' },
+  { icon: <Shield size={20}/>,   title: 'Secure & Reliable',    desc: 'Role-based access and encrypted data storage.' },
+];
+
+const HOW_STEPS = [
+  {
+    num: '1',
+    img: step1Img,
+    title: 'Search',
+    desc: 'Search by service or specialty. Filter by price, distance, and rating.',
+  },
+  {
+    num: '2',
+    img: step2Img,
+    title: 'Choose & review',
+    desc: 'Compare clinics, services, prices, reviews, and available time slots.',
+  },
+  {
+    num: '3',
+    img: step3Img,
+    title: 'Book your appointment',
+    desc: 'Select a time slot and confirm. Get instant email confirmation.',
+  },
 ];
 
 export default function SearchPage() {
@@ -68,7 +93,7 @@ export default function SearchPage() {
           </h1>
 
           <p className={styles.heroSub}>
-            Compare prices, distance, and ratings across 55+ clinics in Japan's major cities.
+            Book trusted clinics across Japan in under 1 minute.
           </p>
 
           <div className={styles.searchWrap} ref={searchRef}>
@@ -141,20 +166,39 @@ export default function SearchPage() {
       </section>
 
       <section className={styles.howSection}>
-        <div className={styles.sectionInner}>
+        <div className={styles.howInner}>
           <div className={styles.sectionEyebrow}>How it works</div>
-          <h2 className={styles.sectionTitle}>Book in 3 simple steps</h2>
-          <div className={styles.stepsGrid}>
-            {[
-              { n:'01', icon:'🔍', title:'Search',         desc:'Search by service or specialty. Filter by price, distance, and rating instantly.' },
-              { n:'02', icon:'📍', title:'Smart ranking',  desc:'Our algorithm ranks clinics.' },
-              { n:'03', icon:'📅', title:'Book instantly', desc:'Choose a slot, confirm as guest or with your account. Email confirmation sent.' },
-            ].map(s => (
-              <div key={s.n} className={styles.stepCard}>
-                <div className={styles.stepNum}>{s.n}</div>
-                <div className={styles.stepEmoji}>{s.icon}</div>
-                <h3 className={styles.stepTitle}>{s.title}</h3>
-                <p className={styles.stepDesc}>{s.desc}</p>
+          <h2 className={styles.howTitle}>Book in 3 simple steps</h2>
+          <p className={styles.howSub}>Find a clinic, choose a time, and Book your appointment.</p>
+
+          <div className={styles.howGrid}>
+            {HOW_STEPS.map((s, i) => (
+              <div key={s.num} className={styles.howCard}>
+
+                <div className={styles.browserChrome}>
+                  <div className={styles.browserDots}>
+                    <span className={styles.dot} style={{ background: '#ff5f57' }}/>
+                    <span className={styles.dot} style={{ background: '#febc2e' }}/>
+                    <span className={styles.dot} style={{ background: '#28c840' }}/>
+                  </div>
+                  <div className={styles.browserBar}>clinicare</div>
+                </div>
+
+                <div className={styles.browserScreen}>
+                  <img src={s.img} alt={s.title} className={styles.stepScreenshot}/>
+                </div>
+
+                <div className={styles.howCardBody}>
+                  <div className={styles.howNum}>{s.num}</div>
+                  <div className={styles.howCardText}>
+                    <h3 className={styles.howCardTitle}>{s.title}</h3>
+                    <p className={styles.howCardDesc}>{s.desc}</p>
+                  </div>
+                </div>
+
+                {i < HOW_STEPS.length - 1 && (
+                  <div className={styles.howArrow}>→</div>
+                )}
               </div>
             ))}
           </div>

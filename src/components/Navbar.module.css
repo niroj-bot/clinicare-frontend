@@ -26,6 +26,16 @@
 }
 .link:hover { color: var(--brand); }
 
+/* Track booking link — subtle, visible to all */
+.trackLink {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 13px; color: var(--text-2);
+  border: 1px solid var(--border);
+  padding: 5px 12px; border-radius: 99px;
+  transition: all .15s;
+}
+.trackLink:hover { border-color: var(--brand); color: var(--brand); }
+
 .userName {
   display: flex; align-items: center; gap: 5px;
   font-size: 13px; color: var(--text-2);
@@ -64,15 +74,6 @@
   padding: 1px 6px; border-radius: 4px;
   text-transform: uppercase; letter-spacing: .04em;
 }
-
-.doctorBtn {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 13px; font-weight: 500;
-  background: #0c2d4a; color: #7dd4f4;
-  padding: 6px 12px; border-radius: var(--radius-md);
-  transition: background .15s;
-}
-.doctorBtn:hover { background: #1a4a6b; }
 
 .clinicBtn {
   display: flex; align-items: center; gap: 5px;

@@ -23,6 +23,7 @@ export const bookingApi = {
   myBookings: ()     => api.get('/api/bookings/my'),
   getByRef:   (ref)  => api.get(`/api/bookings/ref/${ref}`),
   cancel:     (id)   => api.patch(`/api/bookings/${id}/cancel`),
+   track:      (ref, email) => api.get('/api/bookings/track', { params: { ref, email } }),
 };
 
 export const reviewApi = {

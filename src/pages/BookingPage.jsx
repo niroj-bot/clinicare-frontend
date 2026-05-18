@@ -123,7 +123,18 @@ export default function BookingPage() {
           notes:       guestForm.notes,
         });
       }
-      navigate(`/booking/confirm?ref=${res.data.bookingRef}`);
+      if (user) {
+  navigate('/my-bookings');
+} else {
+  navigate('/booking/confirm', {
+    state: {
+      booking: res.data,
+      clinic:  clinic,
+      service: selectedService,
+      slot:    selectedSlot,
+    }
+  });
+}
     } catch (err) {
       setError(err.response?.data?.error || 'Booking failed. Please try again.');
     } finally { setSubmitting(false); }

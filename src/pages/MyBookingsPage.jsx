@@ -72,7 +72,8 @@ export default function MyBookingsPage() {
                         <span>🕐 {b.startTime?.slice(0,5)}</span>
                         <span className={styles.ref}>Ref: {b.bookingRef}</span>
                       </div>
-                      {(b.status === 'BOOKED' || b.status === 'CONFIRMED') && (
+                      {(b.status === 'BOOKED' || b.status === 'CONFIRMED') &&
+                          new Date(b.date) >= new Date(new Date().toDateString()) && (
                         <button
                           className={styles.cancelBtn}
                           onClick={() => handleCancel(b.id)}

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-import { Activity, BookOpen, LogOut, User, LayoutDashboard, UserCircle, Building2 } from 'lucide-react';
+import { Activity, BookOpen, LogOut, User, LayoutDashboard, UserCircle, Building2, Search } from 'lucide-react';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
@@ -16,6 +16,11 @@ export default function Navbar() {
       </Link>
 
       <div className={styles.right}>
+        {/* Track booking — visible to everyone */}
+        <Link to="/track-booking" className={styles.trackLink}>
+          <Search size={14}/> Track booking
+        </Link>
+
         {user ? (
           <>
             {user.role === 'ADMIN' && (

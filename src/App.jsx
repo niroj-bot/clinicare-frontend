@@ -10,6 +10,7 @@ const SearchResultsPage  = lazy(() => import('./pages/SearchResultsPage'));
 const ClinicDetailPage   = lazy(() => import('./pages/ClinicDetailPage'));
 const BookingPage        = lazy(() => import('./pages/BookingPage'));
 const BookingConfirmPage = lazy(() => import('./pages/BookingConfirmPage'));
+const TrackBookingPage = lazy(() => import('./pages/TrackBookingPage'));
 const LoginPage          = lazy(() => import('./pages/LoginPage'));
 const RegisterPage       = lazy(() => import('./pages/RegisterPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
@@ -52,6 +53,7 @@ export default function App() {
           <Route path="/search-results"    element={<><Navbar/><W><SearchResultsPage /></W></>} />
           <Route path="/clinic/:id"        element={<><Navbar/><W><ClinicDetailPage /></W></>} />
           <Route path="/booking/confirm"   element={<><Navbar/><W><BookingConfirmPage /></W></>} />
+          <Route path="/track-booking" element={<><Navbar/><W><TrackBookingPage /></W></>} />
           <Route path="/booking/:clinicId" element={<><Navbar/><W><BookingPage /></W></>} />
           <Route path="/login"             element={<><Navbar/><W><LoginPage /></W></>} />
           <Route path="/register"          element={<><Navbar/><W><RegisterPage /></W></>} />

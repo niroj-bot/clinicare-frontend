@@ -1,22 +1,25 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, Phone, Star, ChevronLeft, Pencil } from 'lucide-react';
+import { MapPin, Phone, Star, ChevronLeft, Pencil, ChevronDown, ChevronUp } from 'lucide-react';
 import { clinicApi, reviewApi } from '../api';
 import { useAuth } from '../AuthContext';
 import MapView from '../components/MapView';
 import StarRating from '../components/StarRating';
 import styles from './ClinicDetailPage.module.css';
 
+const REVIEWS_INITIAL = 3; // show 3 reviews by default
+
 export default function ClinicDetailPage() {
   const { id }   = useParams();
   const { user } = useAuth();
 
-  const [clinic,     setClinic]     = useState(null);
-  const [loading,    setLoading]    = useState(true);
-  const [review,     setReview]     = useState({ rating: 0, comment: '', reviewerName: '' });
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted,  setSubmitted]  = useState(false);
-  const [editing,    setEditing]    = useState(false); // review edit mode
+  const [clinic,       setClinic]       = useState(null);
+  const [loading,      setLoading]      = useState(true);
+  const [review,       setReview]       = useState({ rating: 0, comment: '', reviewerName: '' });
+  const [submitting,   setSubmitting]   = useState(false);
+  const [submitted,    setSubmitted]    = useState(false);
+  const [editing,      setEditing]      = useState(false);
+  const [showAllReviews, setShowAllReviews] = useState(false);
 
   const loadClinic = () => clinicApi.getById(id)
     .then(({ data }) => setClinic(data))
@@ -48,10 +51,10 @@ export default function ClinicDetailPage() {
   if (loading) return <div className={styles.loading}>Loading clinic details...</div>;
   if (!clinic)  return <div className={styles.loading}>Clinic not found.</div>;
 
-  // Find if logged-in user already has a review
-  const myReview = user && clinic.recentReviews?.find(r =>
-    r.reviewerName === user.name
-  );
+  const myReview = user && clinic.recentReviews?.find(r => r.reviewerName === user.name);
+  const allReviews    = clinic.recentReviews ?? [];
+  const visibleReviews = showAllReviews ? allReviews : allReviews.slice(0, REVIEWS_INITIAL);
+  const hasMore        = allReviews.length > REVIEWS_INITIAL;
 
   return (
     <div className={styles.page}>
@@ -60,7 +63,7 @@ export default function ClinicDetailPage() {
 
         {/* Header */}
         <div className={styles.header}>
-          <div>
+          <div className={styles.headerLeft}>
             <h1 className={styles.name}>{clinic.name}</h1>
             <div className={styles.headerMeta}>
               <span><MapPin size={13}/> {clinic.address}</span>
@@ -116,7 +119,7 @@ export default function ClinicDetailPage() {
 
           {/* Right column */}
           <div>
-            {/* Map — zoomed to this clinic */}
+            {/* Map */}
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>Location</h2>
               <MapView clinics={[clinic]} focusClinic={clinic}/>
@@ -124,32 +127,52 @@ export default function ClinicDetailPage() {
 
             {/* Reviews */}
             <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Reviews</h2>
+              <div className={styles.reviewsHeader}>
+                <h2 className={styles.sectionTitle}>Reviews</h2>
+                {allReviews.length > 0 && (
+                  <span className={styles.reviewCount}>{allReviews.length} reviews</span>
+                )}
+              </div>
 
-              {clinic.recentReviews?.length === 0 && (
+              {allReviews.length === 0 && (
                 <p className={styles.empty}>No reviews yet. Be the first!</p>
               )}
 
-              {clinic.recentReviews?.map(r => (
-                <div key={r.id} className={styles.reviewCard}>
-                  <div className={styles.reviewTop}>
-                    <span className={styles.reviewerName}>{r.reviewerName}</span>
-                    <StarRating value={r.rating} size={13}/>
-                    {/* Edit button — only for own review */}
-                    {user && r.reviewerName === user.name && (
-                      <button className={styles.editBtn} onClick={() => startEdit(r)}>
-                        <Pencil size={12}/> Edit
-                      </button>
-                    )}
+              <div className={styles.reviewList}>
+                {visibleReviews.map(r => (
+                  <div key={r.id} className={styles.reviewCard}>
+                    <div className={styles.reviewTop}>
+                      <span className={styles.reviewerName}>{r.reviewerName}</span>
+                      <StarRating value={r.rating} size={13}/>
+                      {user && r.reviewerName === user.name && (
+                        <button className={styles.editBtn} onClick={() => startEdit(r)}>
+                          <Pencil size={12}/> Edit
+                        </button>
+                      )}
+                    </div>
+                    {r.comment && <p className={styles.reviewComment}>{r.comment}</p>}
+                    <span className={styles.reviewDate}>
+                      {new Date(r.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
-                  {r.comment && <p className={styles.reviewComment}>{r.comment}</p>}
-                  <span className={styles.reviewDate}>
-                    {new Date(r.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-              ))}
+                ))}
+              </div>
 
-              {/* Review form — show if: not submitted, or editing */}
+              {/* See more / less */}
+              {hasMore && (
+                <button
+                  className={styles.seeMoreBtn}
+                  onClick={() => setShowAllReviews(prev => !prev)}
+                >
+                  {showAllReviews ? (
+                    <><ChevronUp size={14}/> Show less</>
+                  ) : (
+                    <><ChevronDown size={14}/> See all {allReviews.length} reviews</>
+                  )}
+                </button>
+              )}
+
+              {/* Review form */}
               {submitted && !editing ? (
                 <div className={styles.successMsg}>
                   ✅ Review submitted!
