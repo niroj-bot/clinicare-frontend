@@ -1,32 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { adminApi } from '../../adminApi';
 import { PageHeader, StatCard } from '../../components/admin/AdminUI';
 import { Building2, Stethoscope, CalendarClock, BookOpen } from 'lucide-react';
+import { useBookingUpdates } from '../../hooks/useBookingUpdates';
 import styles from './AdminDashboard.module.css';
 
 export default function AdminDashboard() {
-  const [clinics, setClinics]   = useState([]);
+  const [clinics,  setClinics]  = useState([]);
   const [bookings, setBookings] = useState([]);
-  const [loading, setLoading]   = useState(true);
+  const [loading,  setLoading]  = useState(true);
 
-  useEffect(() => {
-  Promise.all([adminApi.getClinics(), adminApi.getAllBookings()])
-    .then(([clinicsRes, bookingsRes]) => {
-      setClinics(clinicsRes.data);
-      setBookings(bookingsRes.data);
-    })
-    .finally(() => setLoading(false));
-}, []);
+  const load = useCallback(() => {
+    Promise.all([adminApi.getClinics(), adminApi.getAllBookings()])
+      .then(([clinicsRes, bookingsRes]) => {
+        setClinics(clinicsRes.data);
+        setBookings(bookingsRes.data);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => { load(); }, []);
+
+  useBookingUpdates('all', () => { load(); });
+
   const totalServices = clinics.reduce((sum, c) => sum + (c.services?.length || 0), 0);
 
   return (
     <div>
-      <PageHeader
-        title="Dashboard"
-        subtitle="Welcome back! Here's what's happening."
-      />
-
+      <PageHeader title="Dashboard" subtitle="Welcome back! Here's what's happening." />
 
       {loading ? (
         <div className={styles.loading}>Loading...</div>
@@ -34,8 +36,8 @@ export default function AdminDashboard() {
         <>
           <div className={styles.statsGrid}>
             <StatCard label="Total Clinics"   value={clinics.length}   icon="🏥" color="green" />
-            <StatCard label="Active Bookings" value={bookings.filter(b => b.status === 'BOOKED').length} icon="📅" color="blue" />
-            <StatCard label="Completed"       value={bookings.filter(b => b.status === 'COMPLETED').length} icon="✅" color="gray" />
+            <StatCard label="Active Bookings" value={bookings.filter(b => b.status === 'BOOKED').length}    icon="📅" color="blue"  />
+            <StatCard label="Completed"       value={bookings.filter(b => b.status === 'COMPLETED').length} icon="✅" color="gray"  />
             <StatCard label="Total Bookings"  value={bookings.length}  icon="📋" color="amber" />
           </div>
 
@@ -43,10 +45,10 @@ export default function AdminDashboard() {
             <h2 className={styles.sectionTitle}>Quick actions</h2>
             <div className={styles.linkGrid}>
               {[
-                { to: '/admin/clinics',  icon: <Building2 size={20} />,     label: 'Manage Clinics',   sub: 'Add or edit clinic info' },
-                { to: '/admin/services', icon: <Stethoscope size={20} />,   label: 'Manage Services',  sub: 'Update prices and services' },
-                { to: '/admin/slots',    icon: <CalendarClock size={20} />, label: 'Manage Time Slots',sub: 'Add available appointment slots' },
-                { to: '/admin/bookings', icon: <BookOpen size={20} />,      label: 'View Bookings',    sub: 'See and update booking status' },
+                { to: '/admin/clinics',  icon: <Building2 size={20} />,     label: 'Manage Clinics',    sub: 'Add or edit clinic info' },
+                { to: '/admin/services', icon: <Stethoscope size={20} />,   label: 'Manage Services',   sub: 'Update prices and services' },
+                { to: '/admin/slots',    icon: <CalendarClock size={20} />, label: 'Manage Time Slots', sub: 'Add available appointment slots' },
+                { to: '/admin/bookings', icon: <BookOpen size={20} />,      label: 'View Bookings',     sub: 'See and update booking status' },
               ].map(item => (
                 <Link key={item.to} to={item.to} className={styles.quickCard}>
                   <div className={styles.quickIcon}>{item.icon}</div>

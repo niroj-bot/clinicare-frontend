@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
 import { clinicDashApi } from '../../api';
 import { AdminTable, StatusBadge } from '../../components/admin/AdminUI';
+import { useBookingUpdates } from '../../hooks/useBookingUpdates';
+import Pagination from '../../components/Pagination';
 import styles from './ClinicPages.module.css';
 
 const STATUSES = ['ALL','BOOKED','CONFIRMED','COMPLETED','CANCELLED'];
+const PER_PAGE = 10;
 
 export default function ClinicBookings() {
-  const [bookings, setBookings] = useState([]);
-  const [filter,   setFilter]   = useState('ALL');
-  const [date,     setDate]     = useState('');
-  const [loading,  setLoading]  = useState(true);
+  const [bookings,  setBookings]  = useState([]);
+  const [filter,    setFilter]    = useState('ALL');
+  const [date,      setDate]      = useState('');
+  const [loading,   setLoading]   = useState(true);
+  const [clinicId,  setClinicId]  = useState(null);
+  const [page,      setPage]      = useState(1);
 
   const load = () => {
     setLoading(true);
@@ -19,12 +24,25 @@ export default function ClinicBookings() {
     }).then(({ data }) => setBookings(data)).finally(() => setLoading(false));
   };
 
+  useEffect(() => {
+    clinicDashApi.dashboard().then(({ data }) => {
+      if (data?.clinicId) setClinicId(data.clinicId);
+    });
+  }, []);
+
   useEffect(() => { load(); }, [filter, date]);
+  useEffect(() => { setPage(1); }, [filter, date]);
+
+  useBookingUpdates(clinicId, () => {
+    load();
+  });
 
   const updateStatus = async (id, status) => {
     await clinicDashApi.updateStatus(id, status);
     setBookings(prev => prev.map(b => b.id === id ? {...b, status} : b));
   };
+
+  const paginated = bookings.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   const columns = [
     { key: 'bookingRef', label: 'Ref',     render: r => <code style={{fontSize:11}}>{r.bookingRef}</code> },
@@ -58,8 +76,17 @@ export default function ClinicBookings() {
           onChange={e => setDate(e.target.value)} />
         {date && <button className={styles.clearDate} onClick={() => setDate('')}>Clear</button>}
       </div>
-      {loading ? <p style={{color:'var(--text-3)'}}>Loading...</p>
-        : <AdminTable columns={columns} rows={bookings} emptyMsg="No bookings found." />}
+      {loading ? <p style={{color:'var(--text-3)'}}>Loading...</p> : (
+        <>
+          <AdminTable columns={columns} rows={paginated} emptyMsg="No bookings found." />
+          <Pagination
+            total={bookings.length}
+            page={page}
+            perPage={PER_PAGE}
+            onChange={setPage}
+          />
+        </>
+      )}
     </div>
   );
 }

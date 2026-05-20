@@ -1,25 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Search } from 'lucide-react';
 import { adminApi } from '../../adminApi';
 import { PageHeader, AdminTable, StatusBadge } from '../../components/admin/AdminUI';
+import { useBookingUpdates } from '../../hooks/useBookingUpdates';
+import Pagination from '../../components/Pagination';
 import styles from './AdminBookings.module.css';
 
 const STATUSES = ['BOOKED', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
+const PER_PAGE = 10;
 
 export default function AdminBookings() {
-  const [clinics,   setClinics]   = useState([]);
-  const [bookings,  setBookings]  = useState([]);
-  const [selClinic, setSelClinic] = useState('ALL');
-  const [loading,   setLoading]   = useState(false);
-  const [filter,    setFilter]    = useState('ALL');
-  const [searchRef, setSearchRef] = useState('');
+  const [clinics,     setClinics]     = useState([]);
+  const [bookings,    setBookings]    = useState([]);
+  const [selClinic,   setSelClinic]   = useState('ALL');
+  const [loading,     setLoading]     = useState(false);
+  const [filter,      setFilter]      = useState('ALL');
+  const [searchRef,   setSearchRef]   = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const [page,        setPage]        = useState(1);
 
   useEffect(() => {
     adminApi.getClinics().then(({ data }) => setClinics(data));
   }, []);
 
-  useEffect(() => {
+  const fetchBookings = useCallback(() => {
     setLoading(true);
     const fetch = selClinic === 'ALL'
       ? adminApi.getAllBookings()
@@ -28,6 +32,11 @@ export default function AdminBookings() {
       .then(({ data }) => setBookings(data))
       .finally(() => setLoading(false));
   }, [selClinic]);
+
+  useEffect(() => { fetchBookings(); }, [fetchBookings]);
+  useEffect(() => { setPage(1); }, [selClinic, filter, searchRef]);
+
+  useBookingUpdates('all', () => { fetchBookings(); });
 
   const updateStatus = async (id, newStatus) => {
     try {
@@ -45,9 +54,8 @@ export default function AdminBookings() {
     ? bookings.filter(b => b.bookingRef?.toUpperCase().includes(searchRef))
     : bookings;
 
-  const filtered = filter === 'ALL'
-    ? afterRefSearch
-    : afterRefSearch.filter(b => b.status === filter);
+  const filtered  = filter === 'ALL' ? afterRefSearch : afterRefSearch.filter(b => b.status === filter);
+  const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   const columns = [
     { key: 'bookingRef',  label: 'Ref',     render: r => <code style={{ fontSize: 12 }}>{r.bookingRef}</code> },
@@ -58,11 +66,9 @@ export default function AdminBookings() {
     { key: 'startTime',   label: 'Time',   render: r => r.startTime?.slice(0, 5) },
     { key: 'status',      label: 'Status', render: r => <StatusBadge status={r.status} /> },
     { key: 'actions',     label: 'Update', render: r => (
-      <select
-        value={r.status}
+      <select value={r.status}
         onChange={e => updateStatus(r.id, e.target.value)}
-        style={{ height: 30, border: '1px solid var(--border)', borderRadius: 6, padding: '0 8px', fontSize: 12, outline: 'none' }}
-      >
+        style={{ height: 30, border: '1px solid var(--border)', borderRadius: 6, padding: '0 8px', fontSize: 12, outline: 'none' }}>
         {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
       </select>
     )},
@@ -70,20 +76,14 @@ export default function AdminBookings() {
 
   return (
     <div>
-      <PageHeader
-        title="Bookings"
-        subtitle="View and manage all patient appointments"
-      />
+      <PageHeader title="Bookings" subtitle="View and manage all patient appointments" />
 
       <div className={styles.toolbar}>
-    
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <label style={{ fontSize: 13, color: 'var(--text-2)', fontWeight: 500 }}>Clinic:</label>
-          <select
-            value={selClinic}
+          <select value={selClinic}
             onChange={e => { setSelClinic(e.target.value); clearSearch(); }}
-            style={{ height: 34, border: '1px solid var(--border)', borderRadius: 6, padding: '0 10px', fontSize: 13, outline: 'none' }}
-          >
+            style={{ height: 34, border: '1px solid var(--border)', borderRadius: 6, padding: '0 10px', fontSize: 13, outline: 'none' }}>
             <option value="ALL">All Clinics</option>
             {clinics.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
@@ -92,29 +92,20 @@ export default function AdminBookings() {
         <div className={styles.refSearch}>
           <div className={styles.refSearchBar}>
             <Search size={14} style={{ color: 'var(--text-3)', flexShrink: 0 }}/>
-            <input
-              className={styles.refInput}
-              placeholder="Search by booking ref..."
+            <input className={styles.refInput} placeholder="Search by booking ref..."
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSearch()}
-            />
-            {searchRef && (
-              <button className={styles.refClear} onClick={clearSearch}>✕</button>
-            )}
+              onKeyDown={e => e.key === 'Enter' && handleSearch()} />
+            {searchRef && <button className={styles.refClear} onClick={clearSearch}>✕</button>}
           </div>
           <button className={styles.refBtn} onClick={handleSearch}>Search</button>
         </div>
 
         <div className={styles.filterChips}>
           {['ALL', ...STATUSES].map(s => (
-            <button
-              key={s}
+            <button key={s}
               className={`${styles.chip} ${filter === s ? styles.chipActive : ''}`}
-              onClick={() => setFilter(s)}
-            >
-              {s}
-            </button>
+              onClick={() => setFilter(s)}>{s}</button>
           ))}
         </div>
       </div>
@@ -139,11 +130,11 @@ export default function AdminBookings() {
       {loading ? (
         <p style={{ color: 'var(--text-3)', padding: '20px 0' }}>Loading bookings...</p>
       ) : (
-        <AdminTable
-          columns={columns}
-          rows={filtered}
-          emptyMsg={searchRef ? `No booking found with ref "${searchRef}".` : filter === 'ALL' ? 'No bookings found.' : `No ${filter} bookings.`}
-        />
+        <>
+          <AdminTable columns={columns} rows={paginated}
+            emptyMsg={searchRef ? `No booking found with ref "${searchRef}".` : filter === 'ALL' ? 'No bookings found.' : `No ${filter} bookings.`} />
+          <Pagination total={filtered.length} page={page} perPage={PER_PAGE} onChange={setPage} />
+        </>
       )}
     </div>
   );
