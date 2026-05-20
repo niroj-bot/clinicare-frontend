@@ -2,9 +2,9 @@
 
 > クリニック検索・予約ができるWebアプリです。
 
-![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)
-![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite)
-![Deploy](https://img.shields.io/badge/Deploy-Vercel-000000?style=flat-square&logo=vercel)
+![React](https://img.shields.io/badge/React-18-blue?logo=react)
+![Vite](https://img.shields.io/badge/Vite-5-purple?logo=vite)
+![Deploy](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)
 
 ---
 
