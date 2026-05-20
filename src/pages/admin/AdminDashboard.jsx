@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { adminApi } from '../../adminApi';
 import { PageHeader, StatCard } from '../../components/admin/AdminUI';
 import { Building2, Stethoscope, CalendarClock, BookOpen } from 'lucide-react';
-import { useBookingUpdates } from '../../hooks/useBookingUpdates';
 import styles from './AdminDashboard.module.css';
 
 export default function AdminDashboard() {
@@ -11,7 +10,7 @@ export default function AdminDashboard() {
   const [bookings, setBookings] = useState([]);
   const [loading,  setLoading]  = useState(true);
 
-  const load = useCallback(() => {
+  useEffect(() => {
     Promise.all([adminApi.getClinics(), adminApi.getAllBookings()])
       .then(([clinicsRes, bookingsRes]) => {
         setClinics(clinicsRes.data);
@@ -19,12 +18,6 @@ export default function AdminDashboard() {
       })
       .finally(() => setLoading(false));
   }, []);
-
-  useEffect(() => { load(); }, []);
-
-  useBookingUpdates('all', () => { load(); });
-
-  const totalServices = clinics.reduce((sum, c) => sum + (c.services?.length || 0), 0);
 
   return (
     <div>

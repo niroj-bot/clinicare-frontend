@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { adminApi } from '../../adminApi';
 import { PageHeader, AdminTable, StatusBadge } from '../../components/admin/AdminUI';
-import { useBookingUpdates } from '../../hooks/useBookingUpdates';
 import Pagination from '../../components/Pagination';
 import styles from './AdminBookings.module.css';
 
@@ -23,7 +22,7 @@ export default function AdminBookings() {
     adminApi.getClinics().then(({ data }) => setClinics(data));
   }, []);
 
-  const fetchBookings = useCallback(() => {
+  useEffect(() => {
     setLoading(true);
     const fetch = selClinic === 'ALL'
       ? adminApi.getAllBookings()
@@ -33,10 +32,7 @@ export default function AdminBookings() {
       .finally(() => setLoading(false));
   }, [selClinic]);
 
-  useEffect(() => { fetchBookings(); }, [fetchBookings]);
   useEffect(() => { setPage(1); }, [selClinic, filter, searchRef]);
-
-  useBookingUpdates('all', () => { fetchBookings(); });
 
   const updateStatus = async (id, newStatus) => {
     try {

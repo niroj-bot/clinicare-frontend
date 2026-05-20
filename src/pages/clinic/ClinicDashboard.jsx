@@ -1,28 +1,17 @@
 import { useState, useEffect } from 'react';
 import { clinicDashApi } from '../../api';
 import { StatusBadge } from '../../components/admin/AdminUI';
-import { useBookingUpdates } from '../../hooks/useBookingUpdates';
 import styles from './ClinicPages.module.css';
 
 export default function ClinicDashboard() {
-  const [data,     setData]     = useState(null);
-  const [loading,  setLoading]  = useState(true);
-  const [clinicId, setClinicId] = useState(null);
+  const [data,    setData]    = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const load = () => {
-    clinicDashApi.dashboard()
-      .then(({ data }) => {
-        setData({ ...data, todayAppointments: [...(data.todayAppointments || [])] });
-        if (data?.clinicId) setClinicId(data.clinicId);
-      })
-      .finally(() => setLoading(false));
-  };
+  const load = () => clinicDashApi.dashboard()
+    .then(({ data }) => setData(data))
+    .finally(() => setLoading(false));
 
   useEffect(() => { load(); }, []);
-
-  useBookingUpdates(clinicId, () => { load(); });
-
-  useBookingUpdates('all', () => { load(); });
 
   const updateStatus = async (id, status) => {
     await clinicDashApi.updateStatus(id, status);

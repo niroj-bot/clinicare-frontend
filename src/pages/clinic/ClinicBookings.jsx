@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { clinicDashApi } from '../../api';
 import { AdminTable, StatusBadge } from '../../components/admin/AdminUI';
-import { useBookingUpdates } from '../../hooks/useBookingUpdates';
 import Pagination from '../../components/Pagination';
 import styles from './ClinicPages.module.css';
 
@@ -9,12 +8,11 @@ const STATUSES = ['ALL','BOOKED','CONFIRMED','COMPLETED','CANCELLED'];
 const PER_PAGE = 10;
 
 export default function ClinicBookings() {
-  const [bookings,  setBookings]  = useState([]);
-  const [filter,    setFilter]    = useState('ALL');
-  const [date,      setDate]      = useState('');
-  const [loading,   setLoading]   = useState(true);
-  const [clinicId,  setClinicId]  = useState(null);
-  const [page,      setPage]      = useState(1);
+  const [bookings, setBookings] = useState([]);
+  const [filter,   setFilter]   = useState('ALL');
+  const [date,     setDate]     = useState('');
+  const [loading,  setLoading]  = useState(true);
+  const [page,     setPage]     = useState(1);
 
   const load = () => {
     setLoading(true);
@@ -24,18 +22,8 @@ export default function ClinicBookings() {
     }).then(({ data }) => setBookings(data)).finally(() => setLoading(false));
   };
 
-  useEffect(() => {
-    clinicDashApi.dashboard().then(({ data }) => {
-      if (data?.clinicId) setClinicId(data.clinicId);
-    });
-  }, []);
-
   useEffect(() => { load(); }, [filter, date]);
   useEffect(() => { setPage(1); }, [filter, date]);
-
-  useBookingUpdates(clinicId, () => {
-    load();
-  });
 
   const updateStatus = async (id, status) => {
     await clinicDashApi.updateStatus(id, status);
