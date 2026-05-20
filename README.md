@@ -1,16 +1,99 @@
-# React + Vite
+# 🏥 ClinICare — クリニック予約システム
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> クリニック検索・予約ができるWebアプリです。
 
-Currently, two official plugins are available:
+![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)
+![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite)
+![Deploy](https://img.shields.io/badge/Deploy-Vercel-000000?style=flat-square&logo=vercel)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🌐 ライブデモ
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+👉 https://clinicare-frontend-ten.vercel.app/
 
-## Expanding the ESLint configuration
+> ※ 初回アクセス時はバックエンド起動のため少し時間がかかる場合があります。
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## ✨ 主な機能
+
+### 👤 患者向け
+- クリニック検索
+- オンライン予約
+- ゲスト予約
+- 予約確認
+- レビュー投稿
+
+### 🏥 クリニック管理
+- 予約管理
+- サービス管理
+- ダッシュボード表示
+
+### 🛠 管理者機能
+- 全クリニック管理
+- 全予約確認
+- 統計表示
+
+---
+
+## 📸 スクリーンショット
+
+### 検索ページ
+![Search](./screenshots/search-page.png)
+
+### 管理画面
+![Dashboard](./screenshots/dashboard.png)
+
+---
+
+## 🛠 使用技術
+
+| カテゴリ | 技術 |
+|---|---|
+| Frontend | React 18 + Vite |
+| Routing | React Router v6 |
+| API通信 | Axios |
+| 地図 | Leaflet.js |
+| Style | CSS Modules |
+| Deploy | Vercel |
+
+---
+
+## 🔐 デモログイン
+
+ログイン画面の「Patient / Clinic / Admin」ボタンから、
+デモアカウントですぐにログインできます。
+
+---
+
+## 📁 フォルダ構成
+
+```bash
+src/
+├── components/
+├── pages/
+├── api/
+├── context/
+└── utils/
+```
+
+---
+
+## 🖥 開発環境
+
+```bash
+npm install
+npm run dev
+```
+## 🔗 関連リポジトリ
+
+Backend:
+https://github.com/niroj-bot/clinicare-backend
+
+---
+
+## 👨‍💻 Author
+
+GitHub:
+https://github.com/niroj-bot
